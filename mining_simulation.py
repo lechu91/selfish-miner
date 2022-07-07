@@ -14,7 +14,7 @@ def Simulate(alpha,gamma,N, seed):
     ChainLength=0
     # the revenue of the selfish mining pool
     SelfishRevenue=0
-
+    # the number of hiden blocks
     HidenBlocks=0
 
     #A round begin when the state=0
@@ -40,33 +40,51 @@ def Simulate(alpha,gamma,N, seed):
                 #The selfish miners found a new block.
                 #Write a piece of code to change the required variables.
                 #You might need to define new variable to keep track of the number of hidden blocks.
+                HidenBlocks+=1
+                state+=1
             else:
                 #Write a piece of code to change the required variables.
+                state == -1
+                HidenBlocks-=1
 
         elif state==-1:
             #It's the state 0' in the slides (the paper of Eyal and Gun Sirer)
             #There are three situations! 
             #Write a piece of code to change the required variables in each one.
             if r<=alpha:
-
+                SelfishRevenue+=2
+                ChainLength+=2
+                state=0
             elif r<=alpha+(1-alpha)*gamma:
-
+                SelfishRevenue+=1
+                ChainLength+=2
+                state=0
             else:
-
-
+                ChainLength+=2
+                state=0
         elif state==2:
             #The selfish pool has 2 hidden block.
             if r<=alpha:
-
+                HidenBlocks+=1
+                state+=1
             else:
                 #The honest miners found a block.
-
+                SelfishRevenue+=2
+                HidenBlocks-=2
+                state=0
+                ChainLength+=2
+                
         elif state>2:
             if r<=alpha:
                 #The selfish miners found a new block
-
+                HidenBlocks+=1
+                state+=1
             else:
                 #The honest miners found a block
+                HidenBlocks-=1
+                state-=1
+                ChainLength+=1
+                SelfishRevenue+=1
 
     return float(SelfishRevenue)/ChainLength
 
@@ -76,7 +94,6 @@ def Simulate(alpha,gamma,N, seed):
   DON'T include it in your final submission though.
 """
 
-"""
 #let's run the code with the follwing parameters!
 alpha=0.35
 gamma=0.5
@@ -85,4 +102,3 @@ seed = 100
 #This is the theoretical probability computed in the original paper
 print("Theoretical probability :",(alpha*(1-alpha)**2*(4*alpha+gamma*(1-2*alpha))-alpha**3)/(1-alpha*(1+(2-alpha)*alpha)))
 print("Simulated probability :",Simulate(alpha,gamma,Nsimu, seed))
-"""
